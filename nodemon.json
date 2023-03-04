@@ -1,0 +1,9 @@
+{
+    "env": {
+        "DB_USER": "admin",
+        "DB_PASSWORD": "admin",
+        "DB_NAME": "trincot",
+        "JWT_KEY": "trincot_key",
+        "PORT": 3500
+    }
+}
