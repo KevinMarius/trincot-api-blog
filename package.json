@@ -2,7 +2,7 @@
   "name": "blog1",
   "version": "1.0.0",
   "description": "blog application",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
     "dev": "nodemon app.js"
   },
