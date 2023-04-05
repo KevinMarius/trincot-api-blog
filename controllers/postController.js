@@ -29,6 +29,55 @@ exports.getPosts = async (req, res, next) => {
     });
 };
 
+exports.getLastPost = async (req, res, next) => {
+  await Post.find()
+    .populate("author")
+    .populate("category")
+    .populate("state")
+    .limit(4)
+    .sort({createdAt: 'asc'})
+    .select()
+    .then((posts) => {
+      res.status(200).json({
+        posts
+      });
+    })
+    .catch(err => {
+      const error = new HttpError(
+        'Could not find posts.',
+        500
+      );
+      return next(error);
+    });
+}
+
+exports.getBestPost = async (req, res, next) => {
+
+  await Post.aggregate([
+    {
+      $lookup: {
+        from: "comments",
+        let: { post: "$_id" },
+        pipeline: [{ $match: { $expr: { $eq: ["$$post", "$post"] } } }],
+        as: "comment_count"
+      }
+    },
+    { $addFields: { comment_count: { $size: "$comment_count" }}},
+    { $sort: { "comment_count": -1 }},
+    { $limit : 4 },
+  ]).then((posts) => {
+    res.status(200).json({
+      posts
+    });
+  }).catch(err => {
+    const error = new HttpError(
+      'Could not find post.',
+      500
+    );
+    return next(error);
+  });
+}
+
 exports.getPost = async (req, res, next) => {
   const postId = req.params.postId;
   await Post.findById(postId)
@@ -41,6 +90,29 @@ exports.getPost = async (req, res, next) => {
       res.status(200).json({
         post,
         category
+      });
+    })
+    .catch(err => {
+      const error = new HttpError(
+        'Could not find post.',
+        500
+      );
+      return next(error);
+    });
+};
+
+exports.getPostByCategory = async (req, res, next) => {
+  const categoryId = req.params.categoryId;
+  await Post.find({ category: mongoose.Types.ObjectId(categoryId)})
+    .populate("author")
+    .populate("category")
+    .populate("state")
+    .limit(3)
+    .select()
+    .then((posts) => {
+      console.log(posts)
+      res.status(200).json({
+        posts
       });
     })
     .catch(err => {

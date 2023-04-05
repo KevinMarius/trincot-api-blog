@@ -7,6 +7,9 @@ const { check } = require('express-validator')
 
 router.get("/get", postController.getPosts);
 router.get("/get/:postId", postController.getPost);
+router.get("/getPostByCategory/:categoryId", postController.getPostByCategory);
+router.get("/getLastPost", postController.getLastPost);
+router.get("/getBestPost", postController.getBestPost);
 
 router.put(
     "/:postId", 

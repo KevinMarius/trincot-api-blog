@@ -9,7 +9,6 @@ router.get("/get", categoryController.getCategories);
 //router.get("/get/items/:page", categoryController.getCategoriesForPagination);
 router.get("/get/:categoryId", categoryController.getCategory);
 
-
 router.post(
     "/create", 
     authorize(["admin"]),
