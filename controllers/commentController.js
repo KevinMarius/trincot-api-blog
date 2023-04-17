@@ -4,6 +4,9 @@ const HttpError = require('../models/http-error')
 
 exports.getComments = async (req, res, next) => {
 	await Comment.find({ post: req.params.postId })
+		.populate("post")
+		.sort({createdAt: 'asc'})
+		.select()
 		.then(comments => {
 			res.status(200).json({
 				comments
@@ -18,7 +21,24 @@ exports.getComments = async (req, res, next) => {
 		})
 };
 
+exports.countCommentsByPost = async (req, res, next) => {
+	const postId = req.params.postId;
+	  await Comment.count({post: postId})
+	  .then((nbr) => {
+		  res.status(200).json({
+			nbr
+		  });
+		}).catch(err => {
+		  const error = new HttpError(
+			'Could not find post.',
+			500
+		  );
+		  return next(error);
+		});
+  }  
+
 exports.createComment = async (req, res, next) => {
+	console.log(req.params.postId)
 	const comment = new Comment({
 		name: req.body.name,
 		content: req.body.content,

@@ -58,7 +58,11 @@ exports.getBestPost = async (req, res, next) => {
       $lookup: {
         from: "comments",
         let: { post: "$_id" },
-        pipeline: [{ $match: { $expr: { $eq: ["$$post", "$post"] } } }],
+        pipeline: [{ 
+          $match: { 
+            $expr: { $eq: ["$$post", "$post"] }
+          } 
+        }],
         as: "comment_count"
       }
     },
@@ -78,18 +82,18 @@ exports.getBestPost = async (req, res, next) => {
   });
 }
 
+
 exports.getPost = async (req, res, next) => {
   const postId = req.params.postId;
-  await Post.findById(postId)
+  await Post.findById(mongoose.Types.ObjectId(postId))
     .populate("author")
     .populate("category")
     .populate("state")
     .limit(10)
     .select()
-    .then((post, category) => {
+    .then((post) => {
       res.status(200).json({
-        post,
-        category
+        post
       });
     })
     .catch(err => {
@@ -110,7 +114,6 @@ exports.getPostByCategory = async (req, res, next) => {
     .limit(3)
     .select()
     .then((posts) => {
-      console.log(posts)
       res.status(200).json({
         posts
       });

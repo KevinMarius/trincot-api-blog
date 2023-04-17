@@ -4,18 +4,11 @@ const router = express.Router();
 const commentController = require("../controllers/commentController");
 const { check } = require('express-validator');
 
-router.get("/:postId", commentController.getComments);
+router.get("/get/:postId", commentController.getComments);
+router.get("/getCountCommentsByPost/:postId", commentController.countCommentsByPost);
 
 router.post(
     "/:postId",
-    [ 
-        check('name')
-            .not()
-            .isEmpty(),
-        check('content')
-            .not()
-            .isEmpty()
-    ],
     commentController.createComment
 );
 
