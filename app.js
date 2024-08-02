@@ -47,7 +47,7 @@ console.log(process.env.DB_PASSWORD)
 
 //===================== db connect ==========================
 mongoose
-.connect(`mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@trincot.f6cyeqa.mongodb.net/trincot?retryWrites=true&w=majority`)
+.connect(`mongodb+srv://katekema1996:K@tekem@_1996@trincot.f6cyeqa.mongodb.net/trincot?retryWrites=true&w=majority`)
 .then(() => console.log("db connected", bcrypt.hashSync("Password0000", 10)))
 
 mongoose.connection.on(("error"), err => {
